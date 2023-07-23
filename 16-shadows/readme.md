@@ -1,9 +1,4 @@
-<video controls autoplay>
-  <source src="https://github.com/JayKim88/three-js-journey/assets/55373668/8d4ca702-0bfb-483f-a52c-75c63ec7070d" type="video/mp4">
-  <source src="movie.ogg" type="video/ogg">
-  Your browser does not support the video tag.
-</video>
-
+https://github.com/JayKim88/three-js-journey/assets/55373668/8d4ca702-0bfb-483f-a52c-75c63ec7070d
 ```js
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
