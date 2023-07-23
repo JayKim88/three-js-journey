@@ -1,9 +1,4 @@
-<video controls autoplay>
-  <source src="https://github.com/JayKim88/three-js-journey/assets/55373668/73d65914-1379-4a52-994d-f74d3901cd4f" type="video/mp4">
-  <source src="movie.ogg" type="video/ogg">
-  Your browser does not support the video tag.
-</video>
-
+https://github.com/JayKim88/three-js-journey/assets/55373668/73d65914-1379-4a52-994d-f74d3901cd4f
 ```js
 import * as THREE from "three";
 import { FontLoader } from "three/addons/loaders/FontLoader.js";
