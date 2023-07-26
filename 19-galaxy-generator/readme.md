@@ -1,3 +1,12 @@
+
+
+
+https://github.com/JayKim88/three-js-journey/assets/55373668/db8437ec-034f-4710-bcff-8d0a31ed976c
+
+
+
+
+
 ```js
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
