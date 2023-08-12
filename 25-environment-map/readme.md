@@ -1,3 +1,11 @@
+<div style="display:'flex'">
+  <img src="https://github.com/JayKim88/three-js-journey/assets/55373668/4968db0a-a8cf-44cf-a7a9-fb425926fd99" width="250px">
+  <img src="https://github.com/JayKim88/three-js-journey/assets/55373668/773e663d-0306-4e69-ae41-b55b94ce2e76" width="350px">
+  <img src="https://github.com/JayKim88/three-js-journey/assets/55373668/f3645de5-6392-45fa-865a-c5acd1c5a1c2" width="350px">  
+</div>
+
+https://github.com/JayKim88/three-js-journey/assets/55373668/d70f7fef-b15e-47de-bcbb-be661456e89f
+
 ```js
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
