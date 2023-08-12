@@ -1,8 +1,9 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as dat from "lil-gui";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
+import { GroundProjectedSkybox } from "three/addons/objects/GroundProjectedSkybox.js";
 
 /**
  * Loaders
@@ -60,7 +61,7 @@ gui
   .step(0.001)
   .onChange(updateAllMaterials);
 
-// LDR cube texture
+// 1. LDR cube texture
 // const environmentMap = cubeTextureLoader.load([
 //   "/environmentMaps/0/px.png",
 //   "/environmentMaps/0/nx.png",
@@ -73,20 +74,79 @@ gui
 // scene.environment = environmentMap;
 // scene.background = environmentMap;
 
-// HDR (RGBE) enquirectangular
+// 2. HDR(High Dynamic Range) (RGBE) enquirectangular
 // rgbeLoader.load("/environmentMaps/blender-2k-1.hdr", (environmentMap) => {
 //   environmentMap.mapping = THREE.EquirectangularReflectionMapping;
 //   scene.environment = environmentMap;
 //   // scene.background = environmentMap;
 // });
 
-// LRD enquirectangular
-const environmentMap = textureLoader.load("/environmentMaps/animal-city.jpg");
-environmentMap.mapping = THREE.EquirectangularReflectionMapping;
-environmentMap.colorSpace = THREE.SRGBColorSpace;
+// 3. LRD enquirectangular
+// const environmentMap = textureLoader.load("/environmentMaps/animal-city.jpg");
+// environmentMap.mapping = THREE.EquirectangularReflectionMapping; // for equirectangular texture
+// environmentMap.colorSpace = THREE.SRGBColorSpace;
 
-scene.environment = environmentMap;
+// scene.environment = environmentMap;
+// scene.background = environmentMap;
+
+// 4. Ground projected skybox - put the object on the ground!
+// rgbeLoader.load("/environmentMaps/2/2k.hdr", (environmentMap) => {
+//   environmentMap.mapping = THREE.EquirectangularReflectionMapping;
+//   scene.environment = environmentMap; // just for light to the object!
+
+//   //Skybox - the below could be not perfect for other environmentMaps
+//   const skybox = new GroundProjectedSkybox(environmentMap);
+//   skybox.radius = 120;
+//   skybox.height = 11;
+//   skybox.scale.setScalar(50);
+//   scene.add(skybox);
+
+//   gui.add(skybox, "radius", 1, 200, 0.1).name("skyboxRadius");
+//   gui.add(skybox, "height", 1, 200, 0.1).name("skyboxHeight");
+// });
+
+/**
+ * Real time environment map
+ */
+const environmentMap = textureLoader.load(
+  "/environmentMaps/blockadesLabsSkybox/interior_views_cozy_wood_cabin_with_cauldron_and_p.jpg"
+);
+environmentMap.mapping = THREE.EquirectangularReflectionMapping;
+environmentMap.colorSpace = THREE.SRGBColorSpace; // sRGB is a standard RGB (red, green, blue) color space
+
 scene.background = environmentMap;
+
+// Holy donut
+const holyDonut = new THREE.Mesh(
+  new THREE.TorusGeometry(8, 0.5),
+  new THREE.MeshBasicMaterial({ color: new THREE.Color(10, 4, 2) })
+);
+
+// We want our holyDonut to be visible for both the default camera and the cubeCamera.
+// And since the default layer is 0, we just need to add 1:
+holyDonut.layers.enable(1);
+
+holyDonut.position.y = 3.5;
+scene.add(holyDonut);
+
+// Cube render target
+// The main idea is to render the scene inside our own environment map texture by a cube texture.
+// Use a WebGLCubeRenderTarget. Render targets are textures where we can store renders of any scene.
+const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(
+  256, // the resolution of each side of the cube
+  {
+    // behavior as an HDR with a high range of data, THREE.HalfFloatType or THREE.FloatType.
+    // HalfFloatType uses only 16 bits, but it’s still quite a wide range. Better for performance.
+    type: THREE.HalfFloatType,
+  }
+);
+
+scene.environment = cubeRenderTarget.texture;
+
+// Cube camera
+const cubeCamera = new THREE.CubeCamera(0.1, 100, cubeRenderTarget);
+cubeCamera.layers.set(1);
+// cubeCamera.layers.enable(0); // this make the camera see 0 layer objects
 
 /**
  * Torus Knot
@@ -94,7 +154,9 @@ scene.background = environmentMap;
 const torusKnot = new THREE.Mesh(
   new THREE.TorusKnotGeometry(1, 0.4, 100, 16),
   new THREE.MeshStandardMaterial({
-    roughness: 0.3,
+    // a small torus knot is reflected on the identical torus knot. To fix, use layer.
+    // By setting layers on a camera, this camera will only see objects matching the same layers.
+    roughness: 0,
     metalness: 1,
     color: 0xaaaaaa,
   })
@@ -171,6 +233,13 @@ const clock = new THREE.Clock();
 const tick = () => {
   // Time
   const elapsedTime = clock.getElapsedTime();
+
+  // Real time environment map
+  if (holyDonut) {
+    holyDonut.rotation.x = Math.sin(elapsedTime) * 2;
+
+    cubeCamera.update(renderer, scene);
+  }
 
   // Update controls
   controls.update();
