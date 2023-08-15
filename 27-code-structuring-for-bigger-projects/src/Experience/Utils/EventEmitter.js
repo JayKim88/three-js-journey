@@ -1,3 +1,4 @@
+// The EventEmitter can be used for any of your classes that need to trigger events.
 export default class EventEmitter {
   constructor() {
     this.callbacks = {};
