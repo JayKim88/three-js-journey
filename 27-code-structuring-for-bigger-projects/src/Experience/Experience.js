@@ -4,6 +4,9 @@ import Time from "./Utils/Time";
 import Camera from "./Camera";
 import Renderer from "./Renderer";
 import World from "./World/World";
+import Resources from "./Utils/Resources";
+import sources from "./sources";
+import Debug from "./Utils/Debug";
 
 let instance = null;
 
@@ -20,9 +23,11 @@ export default class Experience {
     this.canvas = canvas;
 
     // Setup
+    this.debug = new Debug();
     this.sizes = new Sizes();
     this.time = new Time();
     this.scene = new THREE.Scene();
+    this.resources = new Resources(sources);
     this.camera = new Camera();
     this.renderer = new Renderer();
     this.world = new World();
@@ -41,6 +46,37 @@ export default class Experience {
   }
   update() {
     this.camera.update();
+    this.world.update();
     this.renderer.update();
+  }
+  /**
+   * If you refer to the Three.js documentation (How to dispose of objects),
+   * you will see that we need to dispose of geometries, materials, textures
+   * and then specific things like controls, passes, etc.
+   */
+  destroy() {
+    this.sizes.off("resize");
+    this.time.off("tick");
+
+    // Traverse the whole scene
+    this.scene.traverse((child) => {
+      // Test if it's a mesh
+      if (child instanceof THREE.Mesh) {
+        child.geometry.dispose();
+
+        // Loop through the material properties
+        for (const key in child.material) {
+          const value = child.material[key];
+
+          // Test if there is a dispose function
+          if (value && typeof value.dispose === "function") {
+            value.dispose();
+          }
+        }
+      }
+    });
+    this.camera.controls.dispose();
+    this.renderer.instance.dispose();
+    if (this.debug.active) this.debug.ui.destroy();
   }
 }
