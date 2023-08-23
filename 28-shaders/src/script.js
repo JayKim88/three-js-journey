@@ -2,6 +2,11 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as dat from "lil-gui";
 
+// 1. npm i vite-plugin-glsl
+// 2. vite.config.js settings -> plugins: [glsl()],
+import testVertexShader from "./shaders/test/vertex.glsl";
+import testFragmentShader from "./shaders/test/fragment.glsl";
+
 /**
  * Base
  */
@@ -25,25 +30,9 @@ const textureLoader = new THREE.TextureLoader();
 // Geometry
 const geometry = new THREE.PlaneGeometry(1, 1, 32, 32);
 
-// Material
 const material = new THREE.RawShaderMaterial({
-  vertexShader: `
-    uniform mat4 projectionMatrix;
-    uniform mat4 viewMatrix;
-    uniform mat4 modelMatrix;
-    
-    attribute vec3 position;
-    
-    void main()
-    {
-        
-    }
-
-  
-  
-  
-  `,
-  fragmentShader: ``,
+  vertexShader: testVertexShader,
+  fragmentShader: testFragmentShader,
 });
 
 // Mesh

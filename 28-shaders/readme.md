@@ -1,16 +1,7 @@
-# Three.js Journey
+The language used to code the shaders is called GLSL and stands for OpenGL Shading Language.
 
-## Setup
-Download [Node.js](https://nodejs.org/en/download/).
-Run this followed commands:
+GLSL References
 
-``` bash
-# Install dependencies (only the first time)
-npm install
-
-# Run the local server at localhost:8080
-npm run dev
-
-# Build for production in the dist/ directory
-npm run build
-```
+- [Shaderific documentation](https://shaderific.com/glsl.html)
+- [Kronos Group OpenGL reference pages](https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/indexflat.php)
+- [Book of shaders documentation](https://thebookofshaders.com/)
