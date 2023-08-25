@@ -1,3 +1,6 @@
+
+https://github.com/JayKim88/three-js-journey/assets/55373668/28daa302-f094-48c3-a98e-56716c69e5ac
+
 The language used to code the shaders is called GLSL and stands for OpenGL Shading Language.
 
 ![Screenshot 2023-08-25 at 5 35 35 AM](https://github.com/JayKim88/three-js-journey/assets/55373668/eb299aa8-4828-4407-96d3-f97aafcfdf3e)
