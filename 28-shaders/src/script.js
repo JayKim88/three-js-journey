@@ -24,19 +24,84 @@ const scene = new THREE.Scene();
  */
 const textureLoader = new THREE.TextureLoader();
 
+const flagTexture = textureLoader.load("textures/flag-french.jpg");
+
 /**
  * Test mesh
  */
 // Geometry
 const geometry = new THREE.PlaneGeometry(1, 1, 32, 32);
+/*
+geometry : {
+  attributes {
+    normal: {},
+    position: {},
+    uv: {}
+  },
+  ...
+}
+*/
 
-const material = new THREE.RawShaderMaterial({
+const count = geometry.attributes.position.count;
+const randoms = new Float32Array(count);
+
+for (let i = 0; i < count; i++) {
+  randoms[i] = Math.random();
+}
+
+// This can be used in vertex.glsl as modelPosition.z += aRandom * 0.1;
+geometry.setAttribute("aRandom", new THREE.BufferAttribute(randoms, 1)); // 1 random value per vertex
+
+/*
+Until now, we have used RawShaderMaterial. 
+The ShaderMaterial works just the same, but with pre-built uniforms and attributes prepended in the shader codes. 
+The precision will also be automatically set.
+
+Then, remove the following uniform and attribute and precision in both shaders:
+- uniform mat4 projectionMatrix;
+- uniform mat4 viewMatrix;
+- uniform mat4 modelMatrix;
+- attribute vec3 position;
+- attribute vec2 uv;
+- precision mediump float;
+*/
+const material = new THREE.ShaderMaterial({
   vertexShader: testVertexShader,
   fragmentShader: testFragmentShader,
+  // transparent: true,
+  uniforms: {
+    uFrequency: { value: new THREE.Vector2(10, 5) }, // This can be used in vertex.glsl
+    uTime: { value: 0 }, // This is used for flag animation
+    uColor: {
+      value: new THREE.Color("orange"),
+    },
+    uTexture: {
+      // To take fragment colors from a texture and apply them in the fragment shader,
+      // We must use the texture2D(...) function.
+      // The second parameter consists of the coordinates of where to pick the color on that texture,
+      // We are looking for coordinates to project a texture on a geometry. We are talking about UV coordinates.
+      // -> geometry.attributes.uv
+      value: flagTexture,
+    },
+  },
 });
+
+gui
+  .add(material.uniforms.uFrequency.value, "x")
+  .min(0)
+  .max(20)
+  .step(0.01)
+  .name("frequencyX");
+gui
+  .add(material.uniforms.uFrequency.value, "y")
+  .min(0)
+  .max(20)
+  .step(0.01)
+  .name("frequencyY");
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material);
+mesh.scale.y = 2 / 3;
 scene.add(mesh);
 
 /**
@@ -94,6 +159,9 @@ const clock = new THREE.Clock();
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
+
+  // Update material
+  material.uniforms.uTime.value = elapsedTime;
 
   // Update controls
   controls.update();
