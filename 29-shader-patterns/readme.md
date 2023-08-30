@@ -1,3 +1,6 @@
+
+![Screenshot 2023-08-31 at 6 02 27 AM](https://github.com/JayKim88/three-js-journey/assets/55373668/718fdff5-168e-450e-a73c-cd38cf2ea934)
+
 Shader patterns
 In fragment.glsl
 
