@@ -1,3 +1,33 @@
+<img width="900" alt="Screen Shot 2023-09-05 at 7 32 20 PM" src="https://github.com/JayKim88/three-js-journey/assets/55373668/bf6203eb-4c33-497b-bf4b-0b4b713477e3">
+
+```js
+...
+// script.js
+
+// Material
+const waterMaterial = new THREE.ShaderMaterial({
+  vertexShader: waterVertexShader,
+  fragmentShader: waterFragmentShader,
+  uniforms: {
+    uTime: { value: 0 }, // apply animation
+    uBigWavesElevation: { value: 0.2 }, // apply height
+    uBigWavesFrequency: { value: new THREE.Vector2(4, 1.5) }, // apply x, y waves
+    uBigWavesSpeed: { value: 0.75 }, // control the waves speed
+
+    uSmallWavesElevation: { value: 0.15 },
+    uSmallWavesFrequency: { value: 3 },
+    uSmallWavesSpeed: { value: 0.2 },
+    uSmallWavesIterations: { value: 4 },
+
+    uDepthColor: { value: new THREE.Color(debugObject.depthColor) },
+    uSurfaceColor: { value: new THREE.Color(debugObject.surfaceColor) },
+    uColorOffset: { value: 0.08 }, // used in mixStrength
+    uColorMultiplier: { value: 5 }, // used in mixStrength
+  },
+});
+...
+```
+
 ```glsl
 // vertex.glsl
 
