@@ -1,4 +1,4 @@
-<img width="900" alt="Screen Shot 2023-09-05 at 7 32 20 PM" src="https://github.com/JayKim88/three-js-journey/assets/55373668/bf6203eb-4c33-497b-bf4b-0b4b713477e3">
+<img width="100%" alt="Screen Shot 2023-09-05 at 7 32 20 PM" src="https://github.com/JayKim88/three-js-journey/assets/55373668/bf6203eb-4c33-497b-bf4b-0b4b713477e3">
 
 ```js
 ...
