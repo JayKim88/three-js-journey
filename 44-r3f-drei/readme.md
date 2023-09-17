@@ -1,0 +1,84 @@
+https://github.com/JayKim88/three-js-journey/assets/55373668/3a3ce5c3-9765-4b22-afb4-085c6a91220e
+
+```jsx
+import { useThree, extend } from "@react-three/fiber";
+import {
+  MeshReflectorMaterial,
+  Float,
+  Text,
+  Html,
+  PivotControls,
+  OrbitControls,
+  TransformControls,
+} from "@react-three/drei";
+import { useRef } from "react";
+
+export default function Experience() {
+  const cube = useRef();
+  const sphere = useRef();
+  return (
+    <>
+      {/* makeDefault 
+      The OrbitControls will automatically be disabled when we interact with
+      the TransformControls.
+      */}
+      <OrbitControls makeDefault />
+      <directionalLight position={[1, 2, 3]} intensity={1.5} />
+      <ambientLight intensity={0.5} />
+      {/* anchor is a center of pivot depending on the location of the object */}
+      {/* To render pivot on top of the scene, use its depthTest attribute and set it to false: */}
+      <PivotControls
+        anchor={[0, 0, 0]}
+        depthTest={false}
+        lineWidth={4}
+        axisColors={["#9381ff", "#ff4d6d", "#7ae582"]}
+        scale={100}
+        fixed={true} // the scale will be the pixel size of the PivotControls
+      >
+        <mesh ref={sphere} position-x={-2}>
+          <sphereGeometry />
+          <meshStandardMaterial color="orange" />
+          <Html
+            position={[1, 1, 0]}
+            wrapperClass="label"
+            center
+            distanceFactor={6} // keep size when zooming in and out
+            occlude={[sphere, cube]} // hide this behind these objects
+          >
+            That's a sphere 👍
+          </Html>
+        </mesh>
+      </PivotControls>
+
+      <mesh ref={cube} position-x={2} scale={1.5}>
+        <boxGeometry />
+        <meshStandardMaterial color="mediumpurple" />
+      </mesh>
+      <TransformControls object={cube} mode="translate" />
+      <mesh position-y={-1} rotation-x={-Math.PI * 0.5} scale={10}>
+        <planeGeometry />
+        {/* <meshStandardMaterial color="greenyellow" /> */}
+        <MeshReflectorMaterial
+          resolution={512}
+          blur={[1000, 1000]}
+          mixBlur={1}
+          mirror={0.5} //  make the reflection clearer
+          color="greenyellow"
+        />
+      </mesh>
+      <Float speed={5} floatIntensity={2}>
+        <Text
+          font="./bangers-v20-latin-regular.woff"
+          fontSize={1}
+          color="salmon"
+          position-y={2}
+          maxWidth={2}
+          textAlign="center"
+        >
+          I LOVE R3F
+        </Text>
+      </Float>
+    </>
+  );
+}
+```
