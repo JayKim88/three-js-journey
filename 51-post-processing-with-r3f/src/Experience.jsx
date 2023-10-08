@@ -11,8 +11,11 @@ import {
 import { useControls } from "leva";
 import { BlendFunction, GlitchMode } from "postprocessing";
 import { Perf } from "r3f-perf";
+import Drunk from "./Drunk.jsx";
+import { useRef } from "react";
 
 export default function Experience() {
+  const drunkRef = useRef();
   //   const ssrProps = useControls("SSR Effect", {
   //     temporalResolve: true,
   //     STRETCH_MISSED_RAYS: true,
@@ -48,7 +51,7 @@ export default function Experience() {
     <>
       <color args={["#ffffff"]} attach="background" />
 
-      <EffectComposer multisampling={0}>
+      <EffectComposer multisampling={4}>
         {/* <Vignette
           offset={0.3}
           darkness={0.9}
@@ -68,6 +71,7 @@ export default function Experience() {
           bokehScale={6}
         /> */}
         {/* <SSR {...ssrProps} /> */}
+        <Drunk ref={drunkRef} frequency={2} amplitude={0.1} />
       </EffectComposer>
 
       <Perf position="top-left" />
